@@ -13,12 +13,14 @@ from .files import (
     MetroExAnteIterationResultsFile,
     MetroExAnteNextExpectedTravelTimeFunctionsFile,
     MetroExAnteRouteResultsFile,
+    MetroExAnteSimulatedEdgeQueueLengthsFile,
     MetroExAnteSimulatedTravelTimeFunctionsFile,
     MetroExAnteTripResultsFile,
     MetroExpectedTravelTimeFunctionsFile,
     MetroIterationResultsFile,
     MetroNextExpectedTravelTimeFunctionsFile,
     MetroRouteResultsFile,
+    MetroSimulatedEdgeQueueLengthsFile,
     MetroSimulatedTravelTimeFunctionsFile,
     MetroTripResultsFile,
 )
@@ -66,6 +68,7 @@ class RunSimulationStep(AbstractRunSimulationStep):
         "metro_sim_ttfs": MetroSimulatedTravelTimeFunctionsFile,
         "metro_exp_ttfs": MetroExpectedTravelTimeFunctionsFile,
         "metro_next_exp_ttfs": MetroNextExpectedTravelTimeFunctionsFile,
+        "metro_sim_edge_queue_lengths": MetroSimulatedEdgeQueueLengthsFile,
     }
 
 
@@ -86,4 +89,5 @@ class RunExAnteSimulationStep(AbstractRunSimulationStep):
         "metro_sim_ttfs": MetroExAnteSimulatedTravelTimeFunctionsFile,
         "metro_exp_ttfs": MetroExAnteExpectedTravelTimeFunctionsFile,
         "metro_next_exp_ttfs": MetroExAnteNextExpectedTravelTimeFunctionsFile,
+        "metro_sim_edge_queue_lengths": MetroExAnteSimulatedEdgeQueueLengthsFile,
     }

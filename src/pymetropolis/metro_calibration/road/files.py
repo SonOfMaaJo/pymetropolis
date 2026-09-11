@@ -216,3 +216,87 @@ class TomTomCongestionTimesFile(MetroDataFrameFile):
             nullable=False,
         ),
     ]
+
+
+class TomTomRouteResultsFile(MetroDataFrameFile):
+    path = "calibration/road/tomtom_route_results.parquet"
+    description = (
+        "Edge-level results (entry time into each edge) of the congestion-replay simulation of "
+        "map-matched TomTom routes."
+    )
+    schema = [
+        Column(
+            "tomtom_id",
+            MetroDataType.ID,
+            description="Identifier of the request.",
+            nullable=False,
+        ),
+        Column("edge_id", MetroDataType.ID, description="Identifier of the edge.", nullable=False),
+        Column(
+            "entry_time",
+            MetroDataType.FLOAT,
+            description=(
+                "Time at which the route entered the edge, in number of seconds since midnight."
+            ),
+            nullable=False,
+        ),
+    ]
+
+
+class TomTomTargetCapacitiesFile(MetroDataFrameFile):
+    path = "calibration/road/tomtom_target_capacities.parquet"
+    description = (
+        "Bottleneck capacity per edge type, fitted from TomTom-observed congested times and the "
+        "ex-ante simulation's per-edge queue lengths. Meant to be merged into "
+        "`road_network.capacities` by an external orchestrator between calibration iterations "
+        "(this Step cannot write `road_network.capacities` itself, since that would make it "
+        "depend, transitively through the ex-ante simulation, on its own output)."
+    )
+    schema = [
+        Column(
+            "edge_type",
+            MetroDataType.STRING,
+            description="Edge type.",
+            unique=True,
+            nullable=False,
+        ),
+        Column(
+            "capacity",
+            MetroDataType.FLOAT,
+            description="Fitted bottleneck capacity, in PCE/h, after clamping and EMA relaxation.",
+            nullable=False,
+        ),
+        Column(
+            "raw_ratio",
+            MetroDataType.FLOAT,
+            description=(
+                "Ratio of the raw fitted h_j (inverse capacity) to the previous applied h_j, "
+                "before clamping and relaxation. NaN if the category was skipped."
+            ),
+            nullable=True,
+        ),
+        Column(
+            "nb_observations",
+            MetroDataType.INT,
+            description="Number of TomTom routes with nonzero signal on this edge type.",
+            nullable=False,
+        ),
+        Column(
+            "mean_nonzero_signal",
+            MetroDataType.FLOAT,
+            description=(
+                "Mean, over routes with nonzero signal, of the sum of entry-queue-lengths over "
+                "the route's edges of this type."
+            ),
+            nullable=False,
+        ),
+        Column(
+            "skipped",
+            MetroDataType.BOOL,
+            description=(
+                "Whether the category was frozen this iteration (too few observations or too "
+                "little signal to identify its capacity)."
+            ),
+            nullable=False,
+        ),
+    ]

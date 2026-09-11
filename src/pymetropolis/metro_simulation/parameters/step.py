@@ -194,7 +194,7 @@ class WriteMetroParametersStep(AbstractWriteMetroParametersStep):
         "edges": InputFile(MetroEdgesFile, optional=True),
         "vehicle_types": InputFile(MetroVehicleTypesFile, optional=True),
         "trips": InputFile(MetroTripsFile, optional=True),
-        "tmp": SurveyModeChoiceStatsFile,  # TODO. Remove!
+        "tmp": InputFile(SurveyModeChoiceStatsFile, optional=True),  # TODO. Remove!
     }
     output_files = {"parameters": MetroParametersFile}
 

@@ -64,7 +64,8 @@ class CreateToursStep(PopulationStep):
         persons = self.input["persons"].read()
 
         trips = trips.join(distances, on="trip_id", how="left")
-        if self.input["trip_urban_type"].exists():
+        has_urban_type = self.input["trip_urban_type"].exists()
+        if has_urban_type:
             trip_urban_type = self.input["trip_urban_type"].read()
             trips = trips.join(trip_urban_type, on="trip_id")
         else:
@@ -82,26 +83,8 @@ class CreateToursStep(PopulationStep):
         trips = add_lng_lat(trips, self.input["origins"].read_if_exists(), "origin")
         trips = add_lng_lat(trips, self.input["destinations"].read_if_exists(), "destination")
 
-        tours = (
-            trips.group_by("tour_id")
-            .agg(
-                person_id=pl.col("person_id").first(),
-                nb_trips=pl.len(),
-                nb_activities=pl.len() - 1,
-                origin_lngs=pl.col("origin_lng"),
-                origin_lats=pl.col("origin_lat"),
-                destination_lngs=pl.col("destination_lng"),
-                destination_lats=pl.col("destination_lat"),
-                first_purpose=pl.col("origin_purpose_group").first(),
-                last_purpose=pl.col("destination_purpose_group").last(),
-                purposes=pl.col("destination_purpose_group"),
-                durations=pl.col("destination_activity_duration"),
-                first_departure_time=pl.col("departure_time").first(),
-                last_arrival_time=pl.col("arrival_time").last(),
-                first_activity_start=pl.col("arrival_time").first(),
-                last_activity_end=pl.col("departure_time").last(),
-                travel_times=pl.col("arrival_time") - pl.col("departure_time"),
-                distances=pl.col("od_distance"),
+        if has_urban_type:
+            density_aggs = dict(
                 lowest_density=pl.min_horizontal(
                     pl.col("origin_density").min(), pl.col("destination_density").min()
                 ),
@@ -130,6 +113,44 @@ class CreateToursStep(PopulationStep):
                     pl.col("origin_functional_area_category").max(),
                     pl.col("destination_functional_area_category").max(),
                 ),
+            )
+        else:
+            # When no urban-type data is available, origin/destination density and urban-type
+            # columns are all-null Enum literals. Aggregating them with min_horizontal/max_horizontal
+            # inside a group_by().agg() triggers a Polars bug (mismatched map output length), so the
+            # already-known null result is emitted directly instead of being (re)computed.
+            density_aggs = dict(
+                lowest_density=pl.lit(None, dtype=pl.Enum(DENSITY_CATS)),
+                highest_density=pl.lit(None, dtype=pl.Enum(DENSITY_CATS)),
+                lowest_urban_type=pl.lit(None, dtype=pl.Enum(URBAN_TYPE_CATS)),
+                highest_urban_type=pl.lit(None, dtype=pl.Enum(URBAN_TYPE_CATS)),
+                lowest_functional_area_type=pl.lit(None, dtype=pl.Enum(FNC_AREA_TYPE_CATS)),
+                highest_functional_area_type=pl.lit(None, dtype=pl.Enum(FNC_AREA_TYPE_CATS)),
+                lowest_functional_area_category=pl.lit(None, dtype=pl.Enum(FNC_AREA_CAT_CATS)),
+                highest_functional_area_category=pl.lit(None, dtype=pl.Enum(FNC_AREA_CAT_CATS)),
+            )
+
+        tours = (
+            trips.group_by("tour_id")
+            .agg(
+                person_id=pl.col("person_id").first(),
+                nb_trips=pl.len(),
+                nb_activities=pl.len() - 1,
+                origin_lngs=pl.col("origin_lng"),
+                origin_lats=pl.col("origin_lat"),
+                destination_lngs=pl.col("destination_lng"),
+                destination_lats=pl.col("destination_lat"),
+                first_purpose=pl.col("origin_purpose_group").first(),
+                last_purpose=pl.col("destination_purpose_group").last(),
+                purposes=pl.col("destination_purpose_group"),
+                durations=pl.col("destination_activity_duration"),
+                first_departure_time=pl.col("departure_time").first(),
+                last_arrival_time=pl.col("arrival_time").last(),
+                first_activity_start=pl.col("arrival_time").first(),
+                last_activity_end=pl.col("departure_time").last(),
+                travel_times=pl.col("arrival_time") - pl.col("departure_time"),
+                distances=pl.col("od_distance"),
+                **density_aggs,
             )
             .with_columns(
                 purposes=pl.col("purposes").list.slice(0, pl.len() - 1),

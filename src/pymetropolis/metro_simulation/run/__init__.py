@@ -6,12 +6,14 @@ from .files import (
     MetroExAnteIterationResultsFile,
     MetroExAnteNextExpectedTravelTimeFunctionsFile,
     MetroExAnteRouteResultsFile,
+    MetroExAnteSimulatedEdgeQueueLengthsFile,
     MetroExAnteSimulatedTravelTimeFunctionsFile,
     MetroExAnteTripResultsFile,
     MetroExpectedTravelTimeFunctionsFile,
     MetroIterationResultsFile,
     MetroNextExpectedTravelTimeFunctionsFile,
     MetroRouteResultsFile,
+    MetroSimulatedEdgeQueueLengthsFile,
     MetroSimulatedTravelTimeFunctionsFile,
     MetroTripResultsFile,
 )
@@ -24,6 +26,7 @@ RUN_FILES = [
     MetroExpectedTravelTimeFunctionsFile,
     MetroNextExpectedTravelTimeFunctionsFile,
     MetroRouteResultsFile,
+    MetroSimulatedEdgeQueueLengthsFile,
     MetroExAnteIterationResultsFile,
     MetroExAnteTripResultsFile,
     MetroExAnteAgentResultsFile,
@@ -31,6 +34,7 @@ RUN_FILES = [
     MetroExAnteExpectedTravelTimeFunctionsFile,
     MetroExAnteNextExpectedTravelTimeFunctionsFile,
     MetroExAnteRouteResultsFile,
+    MetroExAnteSimulatedEdgeQueueLengthsFile,
 ]
 
 RUN_STEPS = [RunSimulationStep, RunExAnteSimulationStep]

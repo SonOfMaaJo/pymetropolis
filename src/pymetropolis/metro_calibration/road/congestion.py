@@ -20,6 +20,7 @@ from pymetropolis.metro_simulation.run.files import MetroExAnteSimulatedTravelTi
 from .files import (
     CongestionTimeComparisonPlotFile,
     TomTomCongestionTimesFile,
+    TomTomRouteResultsFile,
     TomTomRoutesFile,
     TomTomRoutesMatchedFile,
 )
@@ -190,6 +191,10 @@ class CongestionSimulationStep(ThreadedStep, AbstractRunSimulationStep, StepWith
     `only_compute_decisions` enabled, so that travel times are computed for the fixed routes without
     any route, mode or departure-time choice. The road-network congestion state is fixed to the
     ex-ante simulation's last-iteration travel-time functions.
+
+    The per-edge entry times of the replayed routes (`route_results`) are also exposed, so that
+    they can be joined against the ex-ante simulation's per-edge queue lengths for the
+    queue-length-based capacity calibration (see `capacity_update.py`).
     """
 
     input_files = {
@@ -199,7 +204,10 @@ class CongestionSimulationStep(ThreadedStep, AbstractRunSimulationStep, StepWith
         "penalties": RoadEdgesPenaltiesFile,
         "road_network_conditions": MetroExAnteSimulatedTravelTimeFunctionsFile,
     }
-    output_files = {"congestion_times": TomTomCongestionTimesFile}
+    output_files = {
+        "congestion_times": TomTomCongestionTimesFile,
+        "route_results": TomTomRouteResultsFile,
+    }
 
     def is_defined(self) -> bool:
         return self.exec_path is not None and self.period is not None
@@ -237,6 +245,9 @@ class CongestionSimulationStep(ThreadedStep, AbstractRunSimulationStep, StepWith
         logger.debug("Computing congestion times")
         congestion_times = compute_congestion_times(route_results, edges)
         self.output["congestion_times"].write(congestion_times)
+        self.output["route_results"].write(
+            route_results.select(tomtom_id="trip_id", edge_id="edge_id", entry_time="entry_time")
+        )
 
 
 class CongestionTimeComparisonStep(Step):

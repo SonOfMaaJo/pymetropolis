@@ -1210,6 +1210,28 @@ TRAVEL_TIME_FUNCTIONS_SCHEMA = [
     ),
 ]
 
+EDGE_QUEUE_LENGTHS_SCHEMA = [
+    Column("edge_id", MetroDataType.ID, description="Identifier of the edge.", nullable=False),
+    Column(
+        "time",
+        MetroDataType.FLOAT,
+        description="Time of the breakpoint, in number of seconds after midnight.",
+        nullable=False,
+    ),
+    Column(
+        "entry_queue_length",
+        MetroDataType.FLOAT,
+        description="Simulated number of vehicles queued at the entry of the edge.",
+        nullable=True,
+    ),
+    Column(
+        "exit_queue_length",
+        MetroDataType.FLOAT,
+        description="Simulated number of vehicles queued at the exit of the edge.",
+        nullable=True,
+    ),
+]
+
 
 class MetroIterationResultsFile(MetroDataFrameFile):
     path = "run/output/iteration_results.parquet"
@@ -1262,6 +1284,15 @@ class MetroNextExpectedTravelTimeFunctionsFile(MetroDataFrameFile):
     schema = TRAVEL_TIME_FUNCTIONS_SCHEMA
 
 
+class MetroSimulatedEdgeQueueLengthsFile(MetroDataFrameFile):
+    path = "run/output/net_cond_sim_edge_queue_lengths.parquet"
+    description = (
+        "Simulated number of vehicles queued at the entry and exit bottleneck of each "
+        "road-network edge, over time."
+    )
+    schema = EDGE_QUEUE_LENGTHS_SCHEMA
+
+
 class MetroExAnteIterationResultsFile(MetroDataFrameFile):
     path = "run/ex_ante_output/iteration_results.parquet"
     description = "Aggregate results over iterations from the Metropolis-Core simulation."
@@ -1311,3 +1342,12 @@ class MetroExAnteNextExpectedTravelTimeFunctionsFile(MetroDataFrameFile):
         "represented as a list of breakpoints."
     )
     schema = TRAVEL_TIME_FUNCTIONS_SCHEMA
+
+
+class MetroExAnteSimulatedEdgeQueueLengthsFile(MetroDataFrameFile):
+    path = "run/ex_ante_output/net_cond_sim_edge_queue_lengths.parquet"
+    description = (
+        "Simulated number of vehicles queued at the entry and exit bottleneck of each "
+        "road-network edge, over time."
+    )
+    schema = EDGE_QUEUE_LENGTHS_SCHEMA
