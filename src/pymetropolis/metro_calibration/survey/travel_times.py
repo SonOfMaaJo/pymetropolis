@@ -23,8 +23,8 @@ from pymetropolis.metro_network.road_network.files import (
 )
 from pymetropolis.metro_pipeline.parameters import IntParameter
 from pymetropolis.metro_pipeline.steps import InputFile
-from pymetropolis.metro_simulation.common import StepWithModes
 from pymetropolis.metro_simulation.run.files import MetroExAnteSimulatedTravelTimeFunctionsFile
+from pymetropolis.modes import StepWithModes
 from pymetropolis.random import RandomStep
 
 from .files import (
@@ -111,7 +111,7 @@ class SurveyedZoneMedoidsStep(StepWithPedestrianForbiddenTypes, RandomStep):
 
         edges: gpd.GeoDataFrame = self.input["edges"].read()
         edges = edges.loc[
-            ~edges["edge_type"].isin(self.forbidden_types + ["track"]),  # TODO remove
+            ~edges["edge_type"].isin(self.forbidden_types),
             ["edge_id", "geometry", "source", "target", "length"],
         ]
         nodes = gpd.GeoDataFrame(
@@ -367,7 +367,7 @@ class SurveyedTripsOpenTripPlannerStep(OpenTripPlannerStep):
             trips = trips.with_columns(pl.Series(medians).alias(col))
         # Note. The waiting_time and legs are not saved due to the difficulty of aggregating
         # multiple trips.
-        trips = trips.sort("id")
+        trips = trips.sort("trip_id")
         self.output["costs"].write(trips)
 
 
