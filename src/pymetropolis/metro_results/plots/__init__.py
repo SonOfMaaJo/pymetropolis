@@ -2,16 +2,24 @@ from .files import (
     ExpectedRoadNetworkCongestionFunctionPlotFile,
     ExpectedRoadTravelTimesConvergencePlotFile,
     MeanSurplusConvergencePlotFile,
+    PublicTransitNetworkPlotFile,
+    RoadNetworkCapacityPlotFile,
+    RoadNetworkFlowPlotFile,
     RouteLengthDiffConvergencePlotFile,
     SimulatedRoadTravelTimesConvergencePlotFile,
     SimulationRoadNetworkCongestionFunctionPlotFile,
+    StudyAreaPlotFile,
     TourDepartureTimeConvergencePlotFile,
     TripDepartureTimeDistributionPlotFile,
     TripModeSharesPlotFile,
 )
 from .steps import (
     ConvergencePlotStep,
+    PublicTransitNetworkPlotStep,
+    RoadNetworkCapacityPlotStep,
     RoadNetworkCongestionFunctionPlotsStep,
+    RoadNetworkFlowPlotStep,
+    StudyAreaPlotStep,
     TripDepartureTimeDistributionStep,
     TripModeSharesStep,
 )
@@ -26,10 +34,18 @@ PLOTS_FILES = [
     ExpectedRoadNetworkCongestionFunctionPlotFile,
     SimulationRoadNetworkCongestionFunctionPlotFile,
     TripModeSharesPlotFile,
+    StudyAreaPlotFile,
+    PublicTransitNetworkPlotFile,
+    RoadNetworkCapacityPlotFile,
+    RoadNetworkFlowPlotFile,
 ]
 PLOTS_STEPS = [
     ConvergencePlotStep,
     TripDepartureTimeDistributionStep,
     RoadNetworkCongestionFunctionPlotsStep,
     TripModeSharesStep,
+    StudyAreaPlotStep,
+    PublicTransitNetworkPlotStep,
+    RoadNetworkCapacityPlotStep,
+    RoadNetworkFlowPlotStep,
 ]

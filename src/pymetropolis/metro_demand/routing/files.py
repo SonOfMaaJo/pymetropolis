@@ -2,6 +2,7 @@ from pymetropolis.metro_pipeline.file import (
     Column,
     MetroDataFrameFile,
     MetroDataType,
+    MetroGeoDataFrameFile,
     PopulationFile,
 )
 
@@ -514,9 +515,83 @@ class TripsPublicTransitItinerariesFile(MetroDataFrameFile, PopulationFile):
             optional=True,
         ),
         Column(
+            "departure_time",
+            MetroDataType.DURATION,
+            description="Effective departure time of the itinerary (time since local midnight).",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "arrival_time",
+            MetroDataType.DURATION,
+            description="Arrival time of the itinerary (time since local midnight).",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
             "waiting_time",
             MetroDataType.DURATION,
             description="Waiting time on the trip.",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "initial_waiting_time",
+            MetroDataType.DURATION,
+            description=(
+                "Waiting time between the requested departure time and the itinerary's departure "
+                "(or between the itinerary's arrival and the requested arrival time)."
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "in_vehicle_time",
+            MetroDataType.DURATION,
+            description=(
+                "Time spent in public-transit vehicles (sum of the transit legs' durations), i.e., "
+                "excluding initial waiting, access, egress, transfer walking and waiting times."
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "access_mode",
+            MetroDataType.STRING,
+            description=(
+                "Mode used to go from the origin to the first public-transit stop: `WALK` or "
+                "`CAR` (car drop-off, only for the zone OD matrix, with "
+                "`od_matrix_travel_times.public_transit_access_mode` set to `car` or "
+                "`walk_then_car`)."
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "access_time",
+            MetroDataType.DURATION,
+            description=(
+                "Duration of the access (from the origin to the first public-transit stop)."
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "egress_mode",
+            MetroDataType.STRING,
+            description=(
+                "Mode used to go from the last public-transit stop to the destination: `WALK` or "
+                "`CAR` (car pick-up)."
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "egress_time",
+            MetroDataType.DURATION,
+            description=(
+                "Duration of the egress (from the last public-transit stop to the destination)."
+            ),
             nullable=True,
             optional=True,
         ),
@@ -575,3 +650,50 @@ class ZonesLevel5RoadNodeFile(MetroDataFrameFile):
     path = "demand/routing/zone5_road_node.parquet"
     description = "Road network node representative of Level-5 zones."
     schema = SCHEMA_ZONE_ROAD_NODE
+
+
+SCHEMA_ZONE_MEDOIDS = [
+    Column("zone_id", MetroDataType.ID, description="Identifier of the zone.", nullable=False),
+    Column(
+        "index",
+        MetroDataType.INT,
+        description="Index of the medoid (each zone can have multiple medoids).",
+        nullable=False,
+    ),
+    Column(
+        "weight",
+        MetroDataType.FLOAT,
+        description="Weight of the medoid cluster among the zone's clusters.",
+        nullable=False,
+    ),
+]
+
+
+class ZonesLevel1MedoidsFile(MetroGeoDataFrameFile):
+    path = "demand/routing/zone1_medoids.geo.parquet"
+    description = "Medoids for each Level-1 zone."
+    schema = SCHEMA_ZONE_MEDOIDS
+
+
+class ZonesLevel2MedoidsFile(MetroGeoDataFrameFile):
+    path = "demand/routing/zone2_medoids.geo.parquet"
+    description = "Medoids for each Level-2 zone."
+    schema = SCHEMA_ZONE_MEDOIDS
+
+
+class ZonesLevel3MedoidsFile(MetroGeoDataFrameFile):
+    path = "demand/routing/zone3_medoids.geo.parquet"
+    description = "Medoids for each Level-3 zone."
+    schema = SCHEMA_ZONE_MEDOIDS
+
+
+class ZonesLevel4MedoidsFile(MetroGeoDataFrameFile):
+    path = "demand/routing/zone4_medoids.geo.parquet"
+    description = "Medoids for each Level-4 zone."
+    schema = SCHEMA_ZONE_MEDOIDS
+
+
+class ZonesLevel5MedoidsFile(MetroGeoDataFrameFile):
+    path = "demand/routing/zone5_medoids.geo.parquet"
+    description = "Medoids for each Level-5 zone."
+    schema = SCHEMA_ZONE_MEDOIDS

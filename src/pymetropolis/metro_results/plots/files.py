@@ -55,3 +55,32 @@ class SimulationRoadNetworkCongestionFunctionPlotFile(MetroPlotFile):
 class TripModeSharesPlotFile(MetroPlotFile, PopulationFile):
     path = "results/graphs/{population}/trips/mode_shares.png"
     description = "Mode shares at the trip-level (in number of trips)."
+
+
+class StudyAreaPlotFile(MetroPlotFile):
+    path = "results/graphs/study_area.png"
+    description = (
+        "Map of the study area: level-3 zones (communes), highlighting the simulation area, "
+        "with level-2 zone (department) boundaries and labels overlaid when available."
+    )
+
+
+class PublicTransitNetworkPlotFile(MetroPlotFile):
+    path = "results/graphs/public_transit_network.png"
+    description = (
+        "Map of the public-transit network active on `gtfs.date`, built from the configured "
+        "GTFS feeds, colored by transit mode."
+    )
+
+
+class RoadNetworkCapacityPlotFile(MetroPlotFile):
+    path = "results/graphs/road_network/capacities.png"
+    description = "Map of the road network, colored by edge type, to visualize capacity assignment."
+
+
+class RoadNetworkFlowPlotFile(MetroPlotFile):
+    path = "results/graphs/road_network/flow.png"
+    description = (
+        "Map of the road network, with edges colored and sized by simulated traffic flow "
+        "(number of vehicles from `route_results`)."
+    )

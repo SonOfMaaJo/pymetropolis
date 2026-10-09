@@ -1,4 +1,3 @@
-from .capacity_update import UpdateRoadCapacitiesStep
 from .congestion import CongestionSimulationStep, CongestionTimeComparisonStep
 from .files import (
     AllRoadFreeFlowTravelTimesFile,
@@ -48,5 +47,4 @@ ROAD_STEPS = [
     FreeFlowTravelTimeComparisonStep,
     CongestionSimulationStep,
     CongestionTimeComparisonStep,
-    UpdateRoadCapacitiesStep,
 ]

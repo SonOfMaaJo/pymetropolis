@@ -18,6 +18,7 @@ from pymetropolis.metro_simulation.run.exec import AbstractRunSimulationStep
 from pymetropolis.metro_simulation.run.files import MetroExAnteSimulatedTravelTimeFunctionsFile
 
 from .files import (
+    CongestionTimeComparisonMetricsFile,
     CongestionTimeComparisonPlotFile,
     TomTomCongestionTimesFile,
     TomTomRouteResultsFile,
@@ -254,7 +255,10 @@ class CongestionTimeComparisonStep(Step):
     """Compares TomTom-observed and Metropolis-simulated congested times, by OD."""
 
     input_files = {"routes": TomTomRoutesFile, "congestion_times": TomTomCongestionTimesFile}
-    output_files = {"comparison_plot": CongestionTimeComparisonPlotFile}
+    output_files = {
+        "comparison_plot": CongestionTimeComparisonPlotFile,
+        "comparison_metrics": CongestionTimeComparisonMetricsFile,
+    }
 
     def run(self):
         import polars as pl
@@ -298,3 +302,13 @@ class CongestionTimeComparisonStep(Step):
             ylabel="Metropolis congested time",
         )
         self.output["comparison_plot"].write(fig)
+        self.output["comparison_metrics"].write(
+            pl.DataFrame(
+                {
+                    "rmse": [rmse],
+                    "nb_routes": [len(df)],
+                    "mean_observed": [float(observed.mean())],
+                    "mean_simulated": [float(predicted.mean())],
+                }
+            )
+        )

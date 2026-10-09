@@ -129,53 +129,52 @@ class MetroEdgesFile(MetroDataFrameFile):
             description="Whether vehicles can overtake each other to exit the edge.",
             nullable=False,
         ),
-        # Column(
-        #     "speed_density.type",
-        #     MetroDataType.STRING,
-        #     description="Type of speed-density function used to compute congested travel time",
-        #     nullable=True,
-        #     optional=True,
-        # ),
-        # Column(
-        #     "speed_density.capacity",
-        #     MetroDataType.FLOAT,
-        #     description="Capacity of the bottleneck speed-density function (vehicle m/s)",
-        #     nullable=True,
-        #     optional=True,
-        # ),
-        # Column(
-        #     "speed_density.min_density",
-        #     MetroDataType.FLOAT,
-        #     description=(
-        #         "Edge density below which free-flow speed is used "
-        #         "(for ThreeRegimes speed-density)"
-        #     ),
-        #     nullable=True,
-        #     optional=True,
-        # ),
-        # Column(
-        #     "speed_density.jam_density",
-        #     MetroDataType.FLOAT,
-        #     description=(
-        #         "Edge density above which jam speed is used (for ThreeRegimes speed-density)"
-        #     ),
-        #     nullable=True,
-        #     optional=True,
-        # ),
-        # Column(
-        #     "speed_density.jam_speed",
-        #     MetroDataType.FLOAT,
-        #     description="Traffic jam speed (m/s, for ThreeRegimes speed-density)",
-        #     nullable=True,
-        #     optional=True,
-        # ),
-        # Column(
-        #     "speed_density.beta",
-        #     MetroDataType.FLOAT,
-        #     description="Slope parameter for the ThreeRegimes speed-density function",
-        #     nullable=True,
-        #     optional=True,
-        # ),
+        Column(
+            "speed_density.type",
+            MetroDataType.STRING,
+            description="Type of speed-density function used to compute congested travel time",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "speed_density.capacity",
+            MetroDataType.FLOAT,
+            description="Capacity of the bottleneck speed-density function (vehicle m/s)",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "speed_density.min_density",
+            MetroDataType.FLOAT,
+            description=(
+                "Edge density below which free-flow speed is used (for ThreeRegimes speed-density)"
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "speed_density.jam_density",
+            MetroDataType.FLOAT,
+            description=(
+                "Edge density above which jam speed is used (for ThreeRegimes speed-density)"
+            ),
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "speed_density.jam_speed",
+            MetroDataType.FLOAT,
+            description="Traffic jam speed (m/s, for ThreeRegimes speed-density)",
+            nullable=True,
+            optional=True,
+        ),
+        Column(
+            "speed_density.beta",
+            MetroDataType.FLOAT,
+            description="Slope parameter for the ThreeRegimes speed-density function",
+            nullable=True,
+            optional=True,
+        ),
     ]
 
 

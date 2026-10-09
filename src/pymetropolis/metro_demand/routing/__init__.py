@@ -8,10 +8,15 @@ from .files import (
     TripsPedestrianNodesFile,
     TripsPublicTransitItinerariesFile,
     TripsRoadNodesFile,
+    ZonesLevel1MedoidsFile,
     ZonesLevel1RoadNodeFile,
+    ZonesLevel2MedoidsFile,
     ZonesLevel2RoadNodeFile,
+    ZonesLevel3MedoidsFile,
     ZonesLevel3RoadNodeFile,
+    ZonesLevel4MedoidsFile,
     ZonesLevel4RoadNodeFile,
+    ZonesLevel5MedoidsFile,
     ZonesLevel5RoadNodeFile,
 )
 from .od_pairs import (
@@ -20,10 +25,15 @@ from .od_pairs import (
     RoadODNodesFromCoordinatesStep,
 )
 from .od_zones import (
+    ZonesLevel1MedoidsStep,
     ZonesLevel1RoadNodesStep,
+    ZonesLevel2MedoidsStep,
     ZonesLevel2RoadNodesStep,
+    ZonesLevel3MedoidsStep,
     ZonesLevel3RoadNodesStep,
+    ZonesLevel4MedoidsStep,
     ZonesLevel4RoadNodesStep,
+    ZonesLevel5MedoidsStep,
     ZonesLevel5RoadNodesStep,
 )
 from .opentripplanner import TripsOpenTripPlannerStep
@@ -50,6 +60,11 @@ ROUTING_FILES = [
     ZonesLevel3RoadNodeFile,
     ZonesLevel4RoadNodeFile,
     ZonesLevel5RoadNodeFile,
+    ZonesLevel1MedoidsFile,
+    ZonesLevel2MedoidsFile,
+    ZonesLevel3MedoidsFile,
+    ZonesLevel4MedoidsFile,
+    ZonesLevel5MedoidsFile,
 ]
 
 ROUTING_STEPS = [
@@ -68,4 +83,9 @@ ROUTING_STEPS = [
     ZonesLevel3RoadNodesStep,
     ZonesLevel4RoadNodesStep,
     ZonesLevel5RoadNodesStep,
+    ZonesLevel1MedoidsStep,
+    ZonesLevel2MedoidsStep,
+    ZonesLevel3MedoidsStep,
+    ZonesLevel4MedoidsStep,
+    ZonesLevel5MedoidsStep,
 ]

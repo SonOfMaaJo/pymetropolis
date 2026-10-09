@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from pymetropolis.metro_demand.zones.france import AbstractFrenchZonesStep
 from pymetropolis.metro_pipeline import PopulationStep
+from pymetropolis.metro_pipeline.parameters import BoolParameter
 
 from .common import DENSITY_CATS, FNC_AREA_CAT_CATS, FNC_AREA_TYPE_CATS, URBAN_TYPE_CATS
 from .files import (
@@ -15,6 +16,33 @@ from .files import (
 
 if TYPE_CHECKING:
     import polars as pl
+
+
+class AbstractFrenchUrbanTypeStep(AbstractFrenchZonesStep):
+    """Abstract Step with the `zones.france_urban_types` parameter, indicating whether INSEE-based
+    urban type / density / functional-area attributes should be computed for households and trips.
+
+    This is independent from `zones.france` (which controls whether the French zoning system is
+    used for the zones geometries themselves): a project may use a custom zoning system (see
+    `zones.custom_files`) while still wanting the INSEE-based urban type attributes, since these
+    only rely on the INSEE commune id (zone3), not on any geometry produced by `FrenchZonesStep`.
+
+    `zones.france_urban_types` is automatically enabled when `zones.france` is `True`, so existing
+    configs relying on `zones.france` alone keep working unchanged.
+    """
+
+    france_urban_types = BoolParameter(
+        "zones.france_urban_types",
+        default=False,
+        description=(
+            "Whether INSEE-based urban type attributes should be added to households and trips, "
+            "based on the zone3 (INSEE commune) id. Automatically enabled when `zones.france` is "
+            "`True`."
+        ),
+    )
+
+    def is_defined(self) -> bool:
+        return self.france_urban_types is True or self.enabled is True
 
 
 def get_insee_data() -> pl.DataFrame:
@@ -41,7 +69,7 @@ def get_insee_data() -> pl.DataFrame:
     return insee_data
 
 
-class FrenchHouseholdsUrbanTypeStep(AbstractFrenchZonesStep, PopulationStep):
+class FrenchHouseholdsUrbanTypeStep(AbstractFrenchUrbanTypeStep, PopulationStep):
     """Add urban type attributes to households' home, based on INSEE municipalities attributes, for
     France only.
     """
@@ -72,7 +100,7 @@ class FrenchHouseholdsUrbanTypeStep(AbstractFrenchZonesStep, PopulationStep):
         self.output["home_urban_types"].write(df)
 
 
-class FrenchTripsUrbanTypeStep(AbstractFrenchZonesStep, PopulationStep):
+class FrenchTripsUrbanTypeStep(AbstractFrenchUrbanTypeStep, PopulationStep):
     """Add urban type attributes to trips' origin / destination, based on INSEE municipalities
     attributes, for France only.
     """

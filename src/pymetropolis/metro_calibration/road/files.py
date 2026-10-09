@@ -188,6 +188,41 @@ class CongestionTimeComparisonPlotFile(MetroPlotFile):
     )
 
 
+class CongestionTimeComparisonMetricsFile(MetroDataFrameFile):
+    path = "calibration/road/congestion_time_comparison_metrics.parquet"
+    description = (
+        "Single-row summary of the TomTom-vs-Metropolis congested-time comparison (RMSE and "
+        "descriptive statistics), meant to be read back by an external calibration orchestrator "
+        "as the objective value for a given set of road-network capacities."
+    )
+    schema = [
+        Column(
+            "rmse",
+            MetroDataType.FLOAT,
+            description="RMSE between TomTom-observed and Metropolis-simulated congested times.",
+            nullable=False,
+        ),
+        Column(
+            "nb_routes",
+            MetroDataType.INT,
+            description="Number of map-matched TomTom routes used in the comparison.",
+            nullable=False,
+        ),
+        Column(
+            "mean_observed",
+            MetroDataType.FLOAT,
+            description="Mean TomTom-observed congested time, in seconds.",
+            nullable=False,
+        ),
+        Column(
+            "mean_simulated",
+            MetroDataType.FLOAT,
+            description="Mean Metropolis-simulated congested time, in seconds.",
+            nullable=False,
+        ),
+    ]
+
+
 class TomTomCongestionTimesFile(MetroDataFrameFile):
     path = "calibration/road/tomtom_congestion_times.parquet"
     description = (
